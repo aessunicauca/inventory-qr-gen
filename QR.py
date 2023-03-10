@@ -25,8 +25,23 @@ urls_imagenes = {
 }
 
 # Función para generar QR y agregarlo al PDF
-def generar_qr(url, qr_size, pdf, x, y):
-    qr = qrcode.QRCode(version=1, box_size=2, border=1)
+def generar_qr(url, qr_size, pdf, x, y, micro=False):
+    if micro:
+        qr = qrcode.QRCode(
+            version=None,
+            error_correction=qrcode.constants.ERROR_CORRECT_L,
+            box_size=1,
+            border=0,
+            box_aspect_ratio=1,
+            fit=True
+        )
+    else:
+        qr = qrcode.QRCode(
+            version=None,
+            error_correction=qrcode.constants.ERROR_CORRECT_Q,
+            box_size=2,
+            border=1
+        )
     qr.add_data(url)
     qr.make(fit=True)
 
@@ -34,17 +49,17 @@ def generar_qr(url, qr_size, pdf, x, y):
     pdf.drawInlineImage(img, x, y, qr_size*4, qr_size*4)
 
 # Parámetros de entrada
-qr_size = 5  # Tamaño del QR (en celdas)
+qr_size = 10  # Tamaño del QR (en celdas)
 filename = "urls_imagenes.pdf"  # Nombre del archivo PDF
 x_start = 50  # Coordenada x de inicio
-y_start = 750  # Coordenada y de inicio
+y_start = 50  # Coordenada y de inicio
 x = x_start
 y = y_start
 
 # Crear el archivo PDF y generar QR para cada URL en el diccionario
 pdf = canvas.Canvas(filename, pagesize=letter)
 for key, value in urls_imagenes.items():
-    generar_qr(value, qr_size, pdf, x, y)
+    generar_qr(value, qr_size, pdf, x, y, micro=False)
     x += qr_size*6  # Avanzar en la coordenada x
     if x > 550:  # Saltar a la siguiente línea si se llega al límite de la página
         x = x_start
@@ -53,4 +68,3 @@ for key, value in urls_imagenes.items():
             pdf.showPage()
             y = y_start
 pdf.save()
-
