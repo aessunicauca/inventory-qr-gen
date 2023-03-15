@@ -49,10 +49,10 @@ if __name__=="__main__":
 	# Lee el Excel
     df = pd.read_excel('inventario.xlsx', sheet_name="Inventario General", header=0)
     # Inserta la columna 'code' con códigos únicos alfanumericos de tamaño 5
-    insert_code_unique(df, 5)
+    insert_code_unique(df, 3)
 
     #Crear columna 'urls' con la combinación sitio web + code
-    df["url"] = df["code"].apply(lambda x: 'astrosuite.firebaseapp.com/' + x)
+    df["url"] = df["code"].apply(lambda x: 'astrosuite.firebaseapp.com/i/' + x)
 
     # Guarda el archivo en Excel
     df.to_excel('exported.xlsx')
