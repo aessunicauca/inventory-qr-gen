@@ -3,6 +3,15 @@
 
 _Este es un proyecto de Python que genera códigos QR a partir de URLs y las agrega a un archivo PDF. Para ello, utiliza la librería qrcode para generar los códigos QR y la librería reportlab para agregarlos al archivo PDF._
 
+### Recomendaciones
+Usar Virtual Environment para la instalación de paquetes y contener el aplicativo. Sigue los pasos en https://pypi.org/project/virtualenvwrapper-win/
+
+```
+pip install virtualenvwrapper-win
+mkvirtualenv -r .\ENV\ENV\requirements.txt qr
+workon qr
+```
+
 ### Requerimientos
 _Para utilizar este generador de códigos QR, necesitas tener instalado Python 3.x y las librerías qrcode y reportlab. Puedes instalarlas fácilmente utilizando pip:_
 
