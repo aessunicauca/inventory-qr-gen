@@ -62,6 +62,7 @@ if __name__=="__main__":
     # TODO: debería recibir el Dataframe y usar las columnas title, type, owner y message 
     # para generar un PDF de los small (imagenes con qr y owner de tamaño 1x1.5cm) y los 
     # large (imagenes con qr, owner, title truncado, message y logo de tamaño 7.5x2.5cm)
-    generar_pagina(df)
+    generar_pagina_small(df)
+    generar_pagina_large(df)
 else:
 	print("Modulo Importado: [", os.path.basename(__file__), "]")
