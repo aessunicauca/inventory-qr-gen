@@ -20,23 +20,24 @@ def generar_qr(url, micro=False):
 
     return img
 
-def generar_sticker_small(url, owner, qr_size, pdf, x, y, micro=False):
+def generar_sticker_small(url, owner, qr_size, pdf, x, y, code, micro=False):
     img = generar_qr(url, micro)
     pdf.drawInlineImage(img, x, y + 7, qr_size, qr_size)
-    pdf.setFont("Helvetica-Bold", 7, leading = None)
-    pdf.drawString(x, y + 7, owner)
+    pdf.setFont("Helvetica-Bold", 6, leading = None)
+    pdf.drawString(x + 5, y + 7, owner)
+    pdf.drawString(x + 6, y + qr_size + 2, code)
 
-def generar_sticker_large(url, title, message, qr_size, pdf, x, y, sticker_width, sticker_height, micro=False):
+def generar_sticker_large(url, title, message, qr_size, pdf, x, y, code, owner, sticker_height, micro=False):
     img = generar_qr(url, micro)
     pdf.drawInlineImage(img, x, y + sticker_height - qr_size, qr_size, qr_size)
 
     pdf.setFont("Helvetica-Bold", 7, leading = None)
-    pdf.drawString(x + 10, y + sticker_height - qr_size - 7, "AESS")
+    pdf.drawString(x + qr_size, y + 8, code + " - " + owner)
 
     _title = insert_newlines(str(title).upper(), 16)[0:33]
     t = pdf.beginText()
     t.setFont("Helvetica-Bold", 10, leading = None)
-    t.setTextOrigin(x + qr_size, y + sticker_height - 16)
+    t.setTextOrigin(x + qr_size, y + sticker_height - 15)
     t.textLines(_title)
     pdf.drawText(t)
 
@@ -45,7 +46,7 @@ def generar_sticker_large(url, title, message, qr_size, pdf, x, y, sticker_width
         _offset = 14
     m = pdf.beginText()
     m.setFont("Helvetica", 10, leading = None)
-    m.setTextOrigin(x + qr_size, y + sticker_height - 27 - _offset)
+    m.setTextOrigin(x + qr_size, y + sticker_height - 26 - _offset)
     m.textLines(insert_newlines(str(message).upper(), 16)[0:33])
     pdf.drawText(m)
 
@@ -63,7 +64,7 @@ def generar_pagina_small(df):
     pdf_small = canvas.Canvas("stickers_small.pdf", pagesize=letter)
     for i in range(df.shape[0]):
         if df["type"][i] == "small":
-            generar_sticker_small(df["url"][i], str(df["owner"][i]), qr_size, pdf_small, x, y, micro=False)
+            generar_sticker_small(df["url"][i], str(df["owner"][i]), qr_size, pdf_small, x, y, str(df["code"][i]), micro=False)
             x += sticker_width  # Avanzar en la coordenada x
             if x > 570:  # Saltar a la siguiente línea si se llega al límite de la página
                 x = x_start
@@ -77,7 +78,7 @@ def generar_pagina_large(df):
     # Parámetros de entrada
     qr_size = 70  # Tamaño del QR (en celdas)
     sticker_width = 180
-    sticker_height = 90
+    sticker_height = 70
     x_start = 20  # Coordenada x de inicio
     y_start = 660  # Coordenada y de inicio
     x = x_start
@@ -86,7 +87,7 @@ def generar_pagina_large(df):
     pdf_large = canvas.Canvas("stickers_large.pdf", pagesize=letter)
     for i in range(df.shape[0]):
         if df["type"][i] == "large":
-            generar_sticker_large(df["url"][i], df["title"][i], df["message"][i], qr_size, pdf_large, x, y, sticker_width, sticker_height, micro=False)
+            generar_sticker_large(df["url"][i], df["title"][i], df["message"][i], qr_size, pdf_large, x, y, str(df["code"][i]), df["owner"][i], sticker_height, micro=False)
             x += sticker_width  # Avanzar en la coordenada x
             if x > 520:  # Saltar a la siguiente línea si se llega al límite de la página
                 x = x_start

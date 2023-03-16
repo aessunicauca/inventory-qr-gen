@@ -39,8 +39,8 @@ def insert_code_category(df):
 
     return df, categorias_df
 
-if __name__=="__main__":
-	# Lee el Excel
+def corregir_excel():
+    # Lee el Excel
     df = pd.read_excel('inventario.xlsx', sheet_name="Inventario General", header=0)
     # Inserta la columna 'code' con códigos únicos alfanumericos de tamaño 5
     insert_code_unique(df, 3)
@@ -51,18 +51,47 @@ if __name__=="__main__":
     [df, categorias_df] = insert_code_category(df)
 
     #TODO: Finish, identify large and none qr meritory categories
-    df["type"] = df["category_code"].map({ "0900": "large", "0006": "none"}).fillna("small")
+    df["type"] = df["category_code"].map({ \
+        "0900": "large",\
+        "0006": "none",\
+        "0103": "large",\
+        "0200": "large",\
+        "0201": "large",\
+        "0202": "large",\
+        "0203": "large",\
+        "0204": "large",\
+        "0205": "large",\
+        "0301": "large",\
+        "0303": "large",\
+        "0304": "large",\
+        "0307": "large",\
+        "0309": "large",\
+        "0700": "large",\
+        "0701": "large",\
+        "0800": "none",\
+        "0603": "none",\
+        "0600": "none",\
+        "0500": "none",\
+        "0501": "none",\
+        "0502": "none",\
+        "0306": "none",\
+        "0013": "none",\
+        "0012": "none",\
+        "0011": "none",\
+        }).fillna("small")
 
     df["message"] = df["type"].map({ "large": "ESCANEA ESTE QR ANTES DE USAR" })
 
     # Guarda el archivo en Excel
     df.to_excel('exported.xlsx')
 
-    # Genera el PDF con el listado de URLs
-    # TODO: debería recibir el Dataframe y usar las columnas title, type, owner y message 
-    # para generar un PDF de los small (imagenes con qr y owner de tamaño 1x1.5cm) y los 
-    # large (imagenes con qr, owner, title truncado, message y logo de tamaño 7.5x2.5cm)
+def generar_qrs():
+    df = pd.read_excel('exported.xlsx',0, header=0)
     generar_pagina_small(df)
     generar_pagina_large(df)
+
+if __name__=="__main__":
+    # corregir_excel()
+    generar_qrs()
 else:
 	print("Modulo Importado: [", os.path.basename(__file__), "]")
